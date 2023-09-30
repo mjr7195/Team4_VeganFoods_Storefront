@@ -5,6 +5,14 @@ class VeganFoodItem {
    private double price;
    private String flavor;
 
+    /**+
+     * method VeganFoodItem creates the default vegan food item
+     * @param id food id
+     * @param name food name
+     * @param brand food brand
+     * @param price food price
+     * @param flavor food flavor
+     */
    public VeganFoodItem(int id, String name, String brand,  double price, String flavor){
        this.setId(id); // same as this.id = id
        this.setName(name); // same as this.name = name
@@ -13,6 +21,11 @@ class VeganFoodItem {
        this.setFlavor(flavor); // same as this.flavor = flavor
    }
    /* *************** getters and setters *************** */
+
+    /**+
+     * method getId gets the item ID
+     * @return id
+     */
     public int getId() {
         return id;
     }
