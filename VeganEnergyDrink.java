@@ -5,7 +5,7 @@ class VeganEnergyDrink extends VeganFoodItem {
    public VeganEnergyDrink(int id, String name, String brand, double price, String flavor, int caffeineAmount, double size){
        super(id, name, brand, price, flavor);
        this.setCaffeineAmount(caffeineAmount);
-       this.setSize(size);
+       this.setSize(size); // in mg
    }
 
     public int getCaffeineAmount() {
