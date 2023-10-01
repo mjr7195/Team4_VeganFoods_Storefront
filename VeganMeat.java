@@ -1,13 +1,27 @@
+/**+ class VeganMeat created to make vegan meat objects
+ * @ author Joel
+ */
 class VeganMeat extends VeganFoodItem {
+    /**+
+     * The calorieAmount holds the calories for the item
+     */
+    private double calorieAmount;
 
-    private double ouncesAmount;
-
-    public VeganMeat(int id, String name, String brand, double price, String flavor, double ouncesAmount){
+    /** Constructor method for vegan meat */
+    public VeganMeat(int id, String name, String brand, double price, String flavor, double calorieAmount){
         super(id, name, brand, price, flavor);
-        this.setCalorieAmount(ouncesAmount);
+        this.setCalorieAmount(calorieAmount);
     }
 
-    public double getOuncesAmount() {return ouncesAmount; }
+    /**+
+     * getter method for calorieAmount
+     * @return calorieAmount
+     */
+    public double getCalorieAmountAmount() {return calorieAmount; }
 
-    public void setCalorieAmount(double ouncesAmount) { this.ouncesAmount = ouncesAmount;}
+    /**+
+     * setter method for calorieAmount
+     * @param calorieAmount item calories
+     */
+    public void setCalorieAmount(double calorieAmount) { this.calorieAmount = calorieAmount;}
 }
