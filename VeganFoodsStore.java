@@ -1,5 +1,5 @@
 /**+ class VeganFoodsStore is the main class, where main functions occur
- * @ author Marcos, Joel, Cooper
+ * @ author Marcos, Joel, Cooper, Nafis
  */
 public class VeganFoodsStore {
     public static void main(String[] args){
