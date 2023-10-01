@@ -1,7 +1,8 @@
 /**+ class VeganFoodsStore is the main class, where main functions occur
- * @ author Marcos, Joel, Cooper, Nafis
+ * @author Marcos, Joel, Cooper, Nafis
  */
 public class VeganFoodsStore {
+    /** main method */
     public static void main(String[] args){
         VeganEnergyDrink riotEnergy = new VeganEnergyDrink(1, "Riot Energy", "Riot Energy", 37.09, "Berry", 160, 16);
         VeganEnergyDrink guruEnergy = new VeganEnergyDrink(2, "Guru Organic", "Guru", 29.99, "Grape",142, 12);

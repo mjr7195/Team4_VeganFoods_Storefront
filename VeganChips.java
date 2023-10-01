@@ -1,5 +1,5 @@
 /**+ class used to create objects of vegan chips
- * @ author Joel
+ * @author Joel
  */
 class VeganChips extends VeganFoodItem {
     /**+

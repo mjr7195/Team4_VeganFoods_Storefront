@@ -1,5 +1,5 @@
 /**+ class VeganMeat created to make vegan meat objects
- * @ author Joel
+ * @author Joel
  */
 class VeganMeat extends VeganFoodItem {
     /**+
