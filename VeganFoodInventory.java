@@ -22,23 +22,17 @@ public class VeganFoodInventory {
     public void listAllItems(){
        System.out.println("Vegan Items:");
        for (VeganFoodItem veganItem : veganItems){
-          System.out.println("ID: "+ veganItem.getId() + ", Brand: "+ veganItem.getBrand() + ", Name: "+ veganItem.getName() + ", Flavor: "+ veganItem.getFlavor() + ", Price: $"+ veganItem.getPrice());
+          System.out.println( "Brand: "+ veganItem.getBrand() + ", Name: "+ veganItem.getName() + ", Flavor: "+ veganItem.getFlavor() + ", Price: $"+ veganItem.getPrice());
        }
 
     }
-    public Map<Integer, Double> getVeganId(){
-        Map<Integer, Double> idPrice = new TreeMap<>();
+    public Map<String, Double> getVeganNamePrice(){
+        Map<String, Double> namePrice = new TreeMap<>();
         for (VeganFoodItem veganItem : veganItems){
-           idPrice.put(veganItem.getId(), veganItem.getPrice());
+           namePrice.put(veganItem.getName(), veganItem.getPrice());
         }
-        return idPrice;
+        return namePrice;
     }
-    public Map<Integer, String> getVeganName(){
-        Map<Integer, String> idName = new TreeMap<>();
-        for (VeganFoodItem veganItem : veganItems){
-            idName.put(veganItem.getId(), veganItem.getName());
-        }
-        return idName;
-    }
+
 
 }
