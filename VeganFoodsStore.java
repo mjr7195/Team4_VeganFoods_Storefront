@@ -1,3 +1,6 @@
+import java.util.Map;
+import java.util.TreeMap;
+
 /**+ class VeganFoodsStore is the main class, where main functions occur
  * @author Marcos, Joel, Cooper, Nafis
  */
@@ -32,7 +35,25 @@ public class VeganFoodsStore {
         inventory.addVeganItem(beanChips);
         inventory.addVeganItem(veggieChips);
 
+        Map<Integer, Double> itemPrices = new TreeMap<>();
+        itemPrices = inventory.getVeganId();
+        Map<Integer, String> itemNames = new TreeMap<>();
+        itemNames = inventory.getVeganName();
+
+        System.out.println("Welcome to our vegan food store!");
+        System.out.println("These are our available products:");
         //list all items in inventory with price and brand
         inventory.listAllItems();
+
+        System.out.println(itemPrices);
+        System.out.println(itemNames);
+
+       // for (Map.Entry<Integer, Double> entry : itemPrices.entrySet()){
+           // System.out.println("ID: " + entry.getKey()+", Price: " + entry.getValue());
+       // }
+       // while(true){
+          // System.out.println("Please choice an item to send to your shopping cart based on the ID:");
+
+       // }
     }
 }
