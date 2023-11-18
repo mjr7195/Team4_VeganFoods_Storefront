@@ -55,12 +55,9 @@ public class VeganFoodsStore {
            // System.out.println("ID: " + entry.getKey()+", Price: " + entry.getValue());
        // }
         while (true){
-            System.out.println("Please input the name of the item you want to add into your shopping cart from the list above (or type 'remove' to remove an item from your cart): ");
-            System.out.println("When finished, type in 'done' to checkout.");
+            System.out.println("Please input the name of the item you want to add into your shopping cart from the list above (or type 'remove' to remove an item from your cart)");
+            System.out.println("when finished input 'done' to checkout. ");
             String prodChoice = scanner.nextLine().toLowerCase();
-
-            System.out.println("How many of "+ prodChoice + " do you want to add?");
-            int prodQuantity = scanner.nextInt();
 
             if (prodChoice.equals("done")){
                 break;
@@ -80,19 +77,32 @@ public class VeganFoodsStore {
                         System.out.println(itemToRemove+ " has been removed.");
                     }
                 }else{
-                    System.out.println("Item inputed is not in cart");
+                    System.out.println("Item inputted is not in cart");
                 }
+            }else if (itemNamesPrices.containsKey(prodChoice)){
+                System.out.println("How many of "+ prodChoice + " do you want to add?");
+                int prodQuantity = scanner.nextInt();
+                shoppingCart.put(prodChoice, prodQuantity);
+                System.out.println(prodChoice + " has been added to cart.");
             }else{
-                if (itemNamesPrices.containsKey(prodChoice)){
-                    shoppingCart.put(prodChoice, prodQuantity);
-                    System.out.println(prodChoice + " has been added to cart.");
-                }else{
-                    System.out.println("This item is not available");
-                }
+                System.out.println("This item is not available");
             }
-
-
         }
         System.out.println(shoppingCart);
+        double totalInvoice = calcTotal(shoppingCart, itemNamesPrices);
+        System.out.println("The total for your items today is $" + totalInvoice);
+    }
+
+    public static double calcTotal(Map<String, Integer> shopCart, Map<String, Double> itemPrices ){
+        double totalPrice = 0;
+        System.out.println("Shopping Receipt:");
+        for (Map.Entry<String, Integer> entry : shopCart.entrySet()){
+            String cartItem = entry.getKey();
+            int quantity = entry.getValue();
+            double price = itemPrices.get(cartItem);
+            System.out.println("Product: "+ cartItem + " Quantity: " + quantity + " Price: " + price);
+            totalPrice += price * quantity;
+        }
+        return totalPrice;
     }
 }
