@@ -55,35 +55,60 @@ public class VeganFoodsStore {
            // System.out.println("ID: " + entry.getKey()+", Price: " + entry.getValue());
        // }
         while (true){
-            System.out.println("Please input the name of the item you want to add into your shopping cart from the list above (or type 'remove' to remove an item from your cart)");
+            String returnItem;
+            System.out.println("Please input the name of the item you want to add into your shopping cart from the list above.");
+            System.out.println("enter 'remove' to remove an item from your cart");
+            System.out.println("Enter 'return' to return an item.");
             System.out.println("when finished input 'done' to checkout. ");
-            String prodChoice = scanner.nextLine().toLowerCase();
+            String userInput = scanner.nextLine().toLowerCase();
 
-            if (prodChoice.equals("done")){
+            if (userInput.equals("done")){
                 break;
             }
 
-            if (prodChoice.equals("remove")){
+            if (userInput.equals("return")){
+                System.out.println("Please enter the name of the item you want to return: ");
+                returnItem = scanner.nextLine().toLowerCase();
+                if (itemNamesPrices.containsKey(returnItem)){
+                    double moneyReturn = itemNamesPrices.get(returnItem);
+                    System.out.println("The amount returned is $" + moneyReturn);
+                }else{
+                    System.out.println("Sorry, we do not sell this item so we can not issue refund.");
+                }
+            }
+
+            if (userInput.equals("remove")){
                 System.out.println("Please enter the item that you want to remove: ");
                 String itemToRemove = scanner.nextLine().toLowerCase();
+                System.out.println("How many of " + itemToRemove + " do you want to remove");
+                int removeQuan = scanner.nextInt();
 
-                if (itemNamesPrices.containsKey(itemToRemove)) {
+                if (shoppingCart.isEmpty()){
+                    System.out.println("Shopping cart is empty");
+                }
+                else if (itemNamesPrices.containsKey(itemToRemove)) {
                     int quantity = shoppingCart.get(itemToRemove);
-                    if (quantity > 1) {
-                        shoppingCart.put(itemToRemove, quantity - 1);
-                        System.out.println(itemToRemove + " has been removed.");
-                    } else {
+                    while(removeQuan > quantity){
+                        System.out.println("remove amount is greater than item quantity in cart, Please enter an appropriate amount:");
+                        removeQuan = scanner.nextInt();
+                    }
+
+                    if (quantity == removeQuan){
                         shoppingCart.remove(itemToRemove);
                         System.out.println(itemToRemove+ " has been removed.");
+                    }else{
+                        shoppingCart.put(itemToRemove, quantity - removeQuan);
+                        System.out.println(itemToRemove + " has been removed " + removeQuan + " times");
                     }
-                }else{
-                    System.out.println("Item inputted is not in cart");
+                }else {
+                    System.out.println("Item entered is not in cart.");
                 }
-            }else if (itemNamesPrices.containsKey(prodChoice)){
-                System.out.println("How many of "+ prodChoice + " do you want to add?");
+            }
+            if (itemNamesPrices.containsKey(userInput)){
+                System.out.println("How many of "+ userInput + " do you want to add?");
                 int prodQuantity = scanner.nextInt();
-                shoppingCart.put(prodChoice, prodQuantity);
-                System.out.println(prodChoice + " has been added to cart.");
+                shoppingCart.put(userInput, prodQuantity);
+                System.out.println(userInput + " has been added to cart.");
             }else{
                 System.out.println("This item is not available");
             }
@@ -100,7 +125,7 @@ public class VeganFoodsStore {
             String cartItem = entry.getKey();
             int quantity = entry.getValue();
             double price = itemPrices.get(cartItem);
-            System.out.println("Product: "+ cartItem + " Quantity: " + quantity + " Price: " + price);
+            System.out.println("Product: "+ cartItem + ", Quantity: " + quantity + ", Price: " + price);
             totalPrice += price * quantity;
         }
         return totalPrice;
