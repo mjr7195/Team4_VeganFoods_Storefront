@@ -12,7 +12,7 @@ public class VeganFoodInventory {
      */
    private List<VeganFoodItem> veganItems;
 
-   /** Constructor method that that creates list*/
+   /** Constructor method that creates list*/
    public VeganFoodInventory(){ veganItems = new ArrayList<>(); }
 
     /** method addVeganItems puts items into list */
@@ -26,6 +26,7 @@ public class VeganFoodInventory {
        }
 
     }
+    /** method getVeganNamePrice puts inventory item names and prices into a treemap */
     public Map<String, Double> getVeganNamePrice(){
         Map<String, Double> namePrice = new TreeMap<>();
         for (VeganFoodItem veganItem : veganItems){

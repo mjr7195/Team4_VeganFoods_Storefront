@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.regex.*;
+
 
 /**+ class VeganFoodsStore is the main class, where main functions occur
  * @author Marcos, Joel, Cooper, Nafis
@@ -37,11 +39,60 @@ public class VeganFoodsStore {
         inventory.addVeganItem(beanChips);
         inventory.addVeganItem(veggieChips);
 
+        //holds item names with prices
         Map<String, Double> itemNamesPrices = new TreeMap<>();
+        //puts item names and prices into itemNamesPrices
         itemNamesPrices = inventory.getVeganNamePrice();
 
+        //holds customer id and name to welcome customer
+        Map<Integer, String> custIDName = new TreeMap<>();
 
         System.out.println("Welcome to our vegan food store!");
+
+        System.out.println("Are you interested in creating an account with us?");
+        String newReturnCust = scanner.nextLine().toLowerCase();
+        //Regular expressions
+        String emailcheck = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+        Pattern pattern = Pattern.compile(emailcheck);
+
+        if  (newReturnCust.equals("yes")){
+            Random rand = new Random();
+            int custID = rand.nextInt();
+            System.out.println("Please fill in the info needed: ");
+            System.out.println("First Name: ");
+            String fName = scanner.nextLine();
+            System.out.println("Last Name: ");
+            String lName = scanner.nextLine();
+            System.out.println("Address: ");
+            String address = scanner.nextLine();
+            System.out.println("Address 2 (or null for no second address: ");
+            String address2 = scanner.nextLine();
+            System.out.println("City: ");
+            String city = scanner.nextLine();
+            System.out.println("State (Abbreviation only): ");
+            String state = scanner.nextLine();
+            while(state.length() > 2){
+                System.out.println("Please only use the Abbreviation of the State:");
+                state = scanner.nextLine();
+            }
+            System.out.println("Zip Code: ");
+            String zipCode = scanner.nextLine();
+            while(zipCode.length() > 5){
+                System.out.println("Please enter only 5 digits");
+                zipCode = scanner.nextLine();
+            }
+            System.out.println("Email: ");
+            String email = scanner.nextLine();
+            Matcher matcher = pattern.matcher(email);
+            while (!matcher.matches()){
+                System.out.println("Please input a valid email:");
+                email = scanner.nextLine();
+                matcher = pattern.matcher(email);
+            }
+            System.out.println("Phone Number: ");
+            String phoneNum = scanner.nextLine();
+        }
+
         System.out.println("These are our available products:");
         //list all items in inventory with price and brand
         inventory.listAllItems();
