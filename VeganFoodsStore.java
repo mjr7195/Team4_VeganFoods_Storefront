@@ -1,11 +1,13 @@
 import java.util.*;
 import java.util.regex.*;
+import java.sql.*;
 
 
 /**+ class VeganFoodsStore is the main class, where main functions occur
  * @author Marcos, Joel, Cooper, Nafis
  */
 public class VeganFoodsStore {
+
     /** main method */
     public static void main(String[] args){
 
@@ -49,49 +51,14 @@ public class VeganFoodsStore {
 
         System.out.println("Welcome to our vegan food store!");
 
-        System.out.println("Are you interested in creating an account with us?");
+        System.out.println("Are you interested in creating an account with us? Enter 'yes' to register or any key to skip.");
         String newReturnCust = scanner.nextLine().toLowerCase();
-        //Regular expressions
-        String emailcheck = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-        Pattern pattern = Pattern.compile(emailcheck);
 
+        // adds new customer info into database
         if  (newReturnCust.equals("yes")){
-            Random rand = new Random();
-            int custID = rand.nextInt();
-            System.out.println("Please fill in the info needed: ");
-            System.out.println("First Name: ");
-            String fName = scanner.nextLine();
-            System.out.println("Last Name: ");
-            String lName = scanner.nextLine();
-            System.out.println("Address: ");
-            String address = scanner.nextLine();
-            System.out.println("Address 2 (or null for no second address: ");
-            String address2 = scanner.nextLine();
-            System.out.println("City: ");
-            String city = scanner.nextLine();
-            System.out.println("State (Abbreviation only): ");
-            String state = scanner.nextLine();
-            while(state.length() > 2){
-                System.out.println("Please only use the Abbreviation of the State:");
-                state = scanner.nextLine();
-            }
-            System.out.println("Zip Code: ");
-            String zipCode = scanner.nextLine();
-            while(zipCode.length() > 5){
-                System.out.println("Please enter only 5 digits");
-                zipCode = scanner.nextLine();
-            }
-            System.out.println("Email: ");
-            String email = scanner.nextLine();
-            Matcher matcher = pattern.matcher(email);
-            while (!matcher.matches()){
-                System.out.println("Please input a valid email:");
-                email = scanner.nextLine();
-                matcher = pattern.matcher(email);
-            }
-            System.out.println("Phone Number: ");
-            String phoneNum = scanner.nextLine();
+            newCustSignUp();
         }
+
 
         System.out.println("These are our available products:");
         //list all items in inventory with price and brand
@@ -180,5 +147,74 @@ public class VeganFoodsStore {
             totalPrice += price * quantity;
         }
         return totalPrice;
+    }
+    public static void newCustSignUp(){
+        Scanner newCust = new Scanner(System.in);
+        //Regular expressions
+        String emailcheck = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+        Pattern pattern = Pattern.compile(emailcheck);
+
+        Random rand = new Random();
+        int custID = rand.nextInt(1000);
+        System.out.println("Please fill in the info needed: ");
+        System.out.println("First Name: ");
+        String fName = newCust.nextLine();
+        System.out.println("Last Name: ");
+        String lName = newCust.nextLine();
+        System.out.println("Address: ");
+        String address = newCust.nextLine();
+        System.out.println("Address 2 (or null for no second address: ");
+        String address2 = newCust.nextLine();
+        System.out.println("City: ");
+        String city = newCust.nextLine();
+        System.out.println("State (Abbreviation only): ");
+        String state = newCust.nextLine();
+        while(state.length() > 2){
+            System.out.println("Please only use the Abbreviation of the State:");
+            state = newCust.nextLine();
+        }
+        System.out.println("Zip Code: ");
+        String zipCode = newCust.nextLine();
+        while(zipCode.length() > 5){
+            System.out.println("Please enter only 5 digits");
+            zipCode = newCust.nextLine();
+        }
+        System.out.println("Email: ");
+        String email = newCust.nextLine();
+        Matcher matcher = pattern.matcher(email);
+        while (!matcher.matches()){
+            System.out.println("Please input a valid email:");
+            email = newCust.nextLine();
+            matcher = pattern.matcher(email);
+        }
+        System.out.println("Phone Number: ");
+        String phoneNum = newCust.nextLine();
+
+        System.out.println("Your customer ID is "+ custID);
+        int storeVisits = 0;
+
+        //upload data into customer table in database
+        String insertQuery = "INSERT INTO tblCustomers (fldCustomerId, fldFName, fldLName, fldAddress, fldAddress2, fldCity, fldState, fldZipCode, fldEmail, fldPhoneNumber, fldStoreVisits) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn =DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/vegan_foods_store","root","jemgum5d");
+
+            PreparedStatement preparedStatement = conn.prepareStatement(insertQuery);
+
+            preparedStatement.setInt(1,custID);
+            preparedStatement.setString(2,fName);
+            preparedStatement.setString(3,lName);
+            preparedStatement.setString(4, address);
+            preparedStatement.setString(5, address2);
+            preparedStatement.setString(6, city);
+            preparedStatement.setString(7, state);
+            preparedStatement.setString(8, zipCode);
+            preparedStatement.setString(9, email);
+            preparedStatement.setString(10, phoneNum);
+            preparedStatement.setInt(11, storeVisits);
+
+            preparedStatement.executeUpdate();
+
+        }catch(Exception e){ System.out.println(e);}
     }
 }
