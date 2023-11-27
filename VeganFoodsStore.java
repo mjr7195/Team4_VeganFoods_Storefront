@@ -58,24 +58,79 @@ public class VeganFoodsStore {
         if  (newReturnCust.equals("yes")){
             newCustSignUp();
         }
+        ArrayList<Customer> customers = new ArrayList<>();
+        //get Customer info from database
+        String query = "SELECT * FROM tblCustomers";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/vegan_foods_store", "root", "jemgum5d");
 
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            ResultSet rs = preparedStatement.executeQuery();
 
+            while(rs.next()){
+                Customer customer = new Customer(rs.getInt("fldCustomerId"), rs.getString("fldFName"), rs.getString("fldLName"), rs.getString("fldAddress"), rs.getString("fldAddress2"),
+                        rs.getString("fldCity"), rs.getString("fldState"), rs.getString("fldZipCode"), rs.getString("fldEmail"), rs.getString("fldPhoneNumber"), rs.getInt("fldStoreVisits"));
+
+                customers.add(customer);
+            }
+        }catch(Exception e){ System.out.println(e);}
+
+        int currentCustID = 0;
+        String currentCustFName = "";
+        String currentCustLName = "";
+        String currentCustaddress = "";
+        String currentCustaddress2 = "";
+        String currentCustCity = "";
+        String currentCustState = "";
+        String currentCustZipCode = "";
+        String currentCustEmail = "";
+        String currentCustPhoneNum = "";
+        int currentCustStoreVisits = 0;
+
+        // to check customer ID
+        int custID;
+        int checkCustID = 0;
+        do {
+            System.out.println("Please enter your customer ID number (IMPORTANT: If prompt pops up again customer ID is invalid):");
+            custID = scanner.nextInt();
+            for (int i = 0; i < customers.size(); i++) {
+                Customer currentCust = customers.get(i);
+                checkCustID = currentCust.getId();
+                if (custID == checkCustID) {
+                    currentCustID = currentCust.getId();
+                    currentCustFName = currentCust.getfName();
+                    currentCustLName = currentCust.getlName();
+                    currentCustaddress = currentCust.getAddress();
+                    currentCustaddress2 = currentCust.getAddress2();
+                    currentCustCity = currentCust.getCity();
+                    currentCustState = currentCust.getState();
+                    currentCustZipCode = currentCust.getZipCode();
+                    currentCustEmail = currentCust.getEmail();
+                    currentCustPhoneNum = currentCust.getPhoneNum();
+                    currentCustStoreVisits = currentCust.getStoreVisits();
+                }
+            }
+        }while(custID != checkCustID);
+
+        System.out.println("Welcome " + currentCustFName);
         System.out.println("These are our available products:");
         //list all items in inventory with price and brand
         inventory.listAllItems();
 
-        System.out.println(itemNamesPrices);
-
         //create shopping cart
         HashMap<String, Integer> shoppingCart = new HashMap<>();
-        System.out.println();
+        int quantity = 0;
+        int prodQuantity = 0;
+        int totalQuantity = 0;
+        System.out.println();// For Readability.
        // for (Map.Entry<Integer, Double> entry : itemPrices.entrySet()){
            // System.out.println("ID: " + entry.getKey()+", Price: " + entry.getValue());
        // }
         while (true){
             String returnItem;
             System.out.println("Please input the name of the item you want to add into your shopping cart from the list above.");
-            System.out.println("enter 'remove' to remove an item from your cart");
+            System.out.println("Enter 'remove' to remove an item from your cart.");
             System.out.println("Enter 'return' to return an item.");
             System.out.println("when finished input 'done' to checkout. ");
             String userInput = scanner.nextLine().toLowerCase();
@@ -84,7 +139,7 @@ public class VeganFoodsStore {
                 break;
             }
 
-            if (userInput.equals("return")){
+            else if (userInput.equals("return")){
                 System.out.println("Please enter the name of the item you want to return: ");
                 returnItem = scanner.nextLine().toLowerCase();
                 if (itemNamesPrices.containsKey(returnItem)){
@@ -94,8 +149,7 @@ public class VeganFoodsStore {
                     System.out.println("Sorry, we do not sell this item so we can not issue refund.");
                 }
             }
-
-            if (userInput.equals("remove")){
+            else if (userInput.equals("remove")){
                 System.out.println("Please enter the item that you want to remove: ");
                 String itemToRemove = scanner.nextLine().toLowerCase();
                 System.out.println("How many of " + itemToRemove + " do you want to remove");
@@ -105,7 +159,7 @@ public class VeganFoodsStore {
                     System.out.println("Shopping cart is empty");
                 }
                 else if (itemNamesPrices.containsKey(itemToRemove)) {
-                    int quantity = shoppingCart.get(itemToRemove);
+                    quantity = shoppingCart.get(itemToRemove);
                     while(removeQuan > quantity){
                         System.out.println("remove amount is greater than item quantity in cart, Please enter an appropriate amount:");
                         removeQuan = scanner.nextInt();
@@ -116,26 +170,36 @@ public class VeganFoodsStore {
                         System.out.println(itemToRemove+ " has been removed.");
                     }else{
                         shoppingCart.put(itemToRemove, quantity - removeQuan);
+                        totalQuantity = totalQuantity - removeQuan;
                         System.out.println(itemToRemove + " has been removed " + removeQuan + " times");
                     }
-                }else {
+                }else{
                     System.out.println("Item entered is not in cart.");
                 }
             }
-            if (itemNamesPrices.containsKey(userInput)){
-                System.out.println("How many of "+ userInput + " do you want to add?");
-                int prodQuantity = scanner.nextInt();
+            else if (itemNamesPrices.containsKey(userInput)) {
+                System.out.println("How many of " + userInput + " do you want to add?");
+                prodQuantity = scanner.nextInt();
+                totalQuantity += prodQuantity;
                 shoppingCart.put(userInput, prodQuantity);
                 System.out.println(userInput + " has been added to cart.");
-            }else{
+            } else if ((!itemNamesPrices.containsKey(userInput)) && (!userInput.equals("remove")) && (!userInput.equals("done")) && (!userInput.equals("return"))){
                 System.out.println("This item is not available");
             }
+
         }
+        System.out.println(totalQuantity);
         System.out.println(shoppingCart);
         double totalInvoice = calcTotal(shoppingCart, itemNamesPrices);
         System.out.println("The total for your items today is $" + totalInvoice);
     }
-
+    // Methods beyond this point **************************************************************************************************************
+    /**
+     * method calcTotal gets
+     * @param shopCart holds customer shopping items
+     * @param itemPrices holds items names with prices
+     * @return totalPrice
+     */
     public static double calcTotal(Map<String, Integer> shopCart, Map<String, Double> itemPrices ){
         double totalPrice = 0;
         System.out.println("Shopping Receipt:");
@@ -148,6 +212,10 @@ public class VeganFoodsStore {
         }
         return totalPrice;
     }
+
+    /**
+     * method newCustSignUp lets the user register to our store
+     */
     public static void newCustSignUp(){
         Scanner newCust = new Scanner(System.in);
         //Regular expressions
