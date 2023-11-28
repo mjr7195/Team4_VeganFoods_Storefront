@@ -2,7 +2,6 @@ import java.util.*;
 import java.util.regex.*;
 import java.sql.*;
 
-
 /**+ class VeganFoodsStore is the main class, where main functions occur
  * @author Marcos, Joel, Cooper, Nafis
  */
