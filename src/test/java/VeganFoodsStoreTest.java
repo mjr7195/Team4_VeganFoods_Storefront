@@ -11,4 +11,9 @@ class VeganFoodsStoreTest {
     @Test
     void calcTotal() {
     }
+
+    @Test
+    void newCustSignUp() {
+
+    }
 }
