@@ -109,7 +109,7 @@ public class VeganFoodsStore {
                     currentCustEmail = currentCust.getEmail();
                     currentCustPhoneNum = currentCust.getPhoneNum();
                     currentCustStoreVisits = currentCust.getStoreVisits();
-                    break;
+
                 }
             }
         }while(custID != checkCustID);
