@@ -45,8 +45,7 @@ public class VeganFoodsStore {
         //puts item names and prices into itemNamesPrices
         itemNamesPrices = inventory.getVeganNamePrice();
 
-        //holds customer id and name to welcome customer
-        Map<Integer, String> custIDName = new TreeMap<>();
+
 
         System.out.println("Welcome to our vegan food store!");
 
@@ -57,6 +56,26 @@ public class VeganFoodsStore {
         if  (newReturnCust.equals("yes")){
             newCustSignUp();
         }
+        //holds order id and order to check for returns
+        Map<Integer, Double> returnOrder = new TreeMap<>();
+        //puts order id and order total into returnOrder for return checks
+        String orderQuery = "SELECT fldOrderId, fldOrderTotal FROM tblOrders";
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/vegan_foods_store", "root", "jemgum5d");
+
+            PreparedStatement preparedStatement = conn.prepareStatement(orderQuery);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()){
+                int orderId = rs.getInt("fldOrderId");
+                double ordertotal = rs.getDouble("fldOrderTotal");
+
+                returnOrder.put(orderId, ordertotal);
+            }
+        }catch(Exception e){ System.out.println(e);}
+
+
         ArrayList<Customer> customers = new ArrayList<>();
         //get Customer info from database
         String query = "SELECT * FROM tblCustomers";
@@ -129,7 +148,7 @@ public class VeganFoodsStore {
            // System.out.println("ID: " + entry.getKey()+", Price: " + entry.getValue());
        // }
         while (true){
-            String returnItem;
+            int returnId;
             System.out.println("Please input the name of the item you want to add into your shopping cart from the list above.");
             System.out.println("Enter 'remove' to remove an item from your cart.");
             System.out.println("Enter 'return' to return an item.");
@@ -142,15 +161,15 @@ public class VeganFoodsStore {
             }
 
             else if (userInput.equals("return")){
-                System.out.println("Please enter the name of the item you want to return: ");
-                returnItem = scanner.nextLine().toLowerCase();
+                System.out.println("Please enter the order ID of the order you want to return: ");
+                returnId = scanner.nextInt();
                 scanner.nextLine();
-                if (itemNamesPrices.containsKey(returnItem)){
-                    double moneyReturn = itemNamesPrices.get(returnItem);
+                if (returnOrder.containsKey(returnId)){
+                    double moneyReturn = returnOrder.get(returnId);
                     System.out.println("The amount returned is $" + moneyReturn);
                     scanner.nextLine();
                 }else{
-                    System.out.println("Sorry, we do not sell this item so we can not issue refund.");
+                    System.out.println("Sorry, order ID is invalid.");
                     scanner.nextLine();
                 }
             }
@@ -177,6 +196,7 @@ public class VeganFoodsStore {
                     if (quantity == removeQuan){
                         shoppingCart.remove(itemToRemove);
                         System.out.println(itemToRemove+ " has been removed.");
+                        totalQuantity = totalQuantity - removeQuan;
                         scanner.nextLine();
                     }else{
                         shoppingCart.put(itemToRemove, quantity - removeQuan);
@@ -203,9 +223,37 @@ public class VeganFoodsStore {
 
         System.out.println(totalQuantity);
         System.out.println(shoppingCart);
+        Random rand = new Random();
+        int orderID = rand.nextInt(1000);
+        System.out.println("order ID: " + orderID);
         double totalInvoice = calcTotal(shoppingCart, itemNamesPrices);
         System.out.println("The total for your items today is $" + totalInvoice);
+
+
+        System.out.println("Order will be shipped to the following address on file:");
+        System.out.println(currentCustFName +" "+ currentCustLName);
+        System.out.println(currentCustaddress);
+        System.out.println(currentCustCity + ", "+ currentCustState +" "+ currentCustZipCode);
+
+        //sends transaction to the order table
+        String insertOrderQuery = "INSERT INTO tblOrders (fldOrderId, fldCustomerId, fldItemsCount, fldOrderTotal) VALUES (?, ?, ?, ?)";
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn =DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/vegan_foods_store","root","jemgum5d");
+
+            PreparedStatement preparedStatement = conn.prepareStatement(insertOrderQuery);
+
+            preparedStatement.setInt(1,orderID);
+            preparedStatement.setInt(2,currentCustID);
+            preparedStatement.setInt(3,totalQuantity);
+            preparedStatement.setDouble(4,totalInvoice);
+
+            preparedStatement.executeUpdate();
+
+        }catch(Exception e){ System.out.println(e);}
     }
+
+
     // Methods beyond this point **************************************************************************************************************
     /**
      * method calcTotal gets
