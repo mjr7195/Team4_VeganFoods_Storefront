@@ -2,18 +2,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class VeganFoodsStoreTest {
-
+class VeganEnergyDrinkTest {
     @Test
-    void main() {
+    void setCaffeineAmount() {
+
     }
-
     @Test
-    void calcTotal() {
-    }
-
-    @Test
-    void newCustSignUp() {
+    void setSize() {
 
     }
 }
