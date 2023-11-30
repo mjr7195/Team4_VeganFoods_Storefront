@@ -91,13 +91,13 @@ public class VeganFoodsStore {
         // to check customer ID
         int custID;
         int checkCustID = 0;
-        do {
+        do{
             System.out.println("Please enter your customer ID number (IMPORTANT: If prompt pops up again customer ID is invalid):");
             custID = scanner.nextInt();
             for (int i = 0; i < customers.size(); i++) {
                 Customer currentCust = customers.get(i);
                 checkCustID = currentCust.getId();
-                if (custID == checkCustID) {
+                if (custID == currentCust.getId()) {
                     currentCustID = currentCust.getId();
                     currentCustFName = currentCust.getfName();
                     currentCustLName = currentCust.getlName();
@@ -109,6 +109,7 @@ public class VeganFoodsStore {
                     currentCustEmail = currentCust.getEmail();
                     currentCustPhoneNum = currentCust.getPhoneNum();
                     currentCustStoreVisits = currentCust.getStoreVisits();
+                    break;
                 }
             }
         }while(custID != checkCustID);
@@ -123,6 +124,7 @@ public class VeganFoodsStore {
         int quantity = 0;
         int prodQuantity = 0;
         int totalQuantity = 0;
+        String userInput;
         System.out.println();// For Readability.
        // for (Map.Entry<Integer, Double> entry : itemPrices.entrySet()){
            // System.out.println("ID: " + entry.getKey()+", Price: " + entry.getValue());
@@ -133,7 +135,8 @@ public class VeganFoodsStore {
             System.out.println("Enter 'remove' to remove an item from your cart.");
             System.out.println("Enter 'return' to return an item.");
             System.out.println("when finished input 'done' to checkout. ");
-            String userInput = scanner.nextLine().toLowerCase();
+            userInput = scanner.nextLine().toLowerCase();
+            scanner.nextLine();
 
             if (userInput.equals("done")){
                 break;
@@ -142,52 +145,63 @@ public class VeganFoodsStore {
             else if (userInput.equals("return")){
                 System.out.println("Please enter the name of the item you want to return: ");
                 returnItem = scanner.nextLine().toLowerCase();
+                scanner.nextLine();
                 if (itemNamesPrices.containsKey(returnItem)){
                     double moneyReturn = itemNamesPrices.get(returnItem);
                     System.out.println("The amount returned is $" + moneyReturn);
+                    scanner.nextLine();
                 }else{
                     System.out.println("Sorry, we do not sell this item so we can not issue refund.");
+                    scanner.nextLine();
                 }
             }
             else if (userInput.equals("remove")){
                 System.out.println("Please enter the item that you want to remove: ");
                 String itemToRemove = scanner.nextLine().toLowerCase();
+                scanner.nextLine();
                 System.out.println("How many of " + itemToRemove + " do you want to remove");
                 int removeQuan = scanner.nextInt();
+                scanner.nextLine();
 
                 if (shoppingCart.isEmpty()){
                     System.out.println("Shopping cart is empty");
+                    scanner.nextLine();
                 }
                 else if (itemNamesPrices.containsKey(itemToRemove)) {
                     quantity = shoppingCart.get(itemToRemove);
                     while(removeQuan > quantity){
                         System.out.println("remove amount is greater than item quantity in cart, Please enter an appropriate amount:");
                         removeQuan = scanner.nextInt();
+                        scanner.nextLine();
                     }
 
                     if (quantity == removeQuan){
                         shoppingCart.remove(itemToRemove);
                         System.out.println(itemToRemove+ " has been removed.");
+                        scanner.nextLine();
                     }else{
                         shoppingCart.put(itemToRemove, quantity - removeQuan);
                         totalQuantity = totalQuantity - removeQuan;
                         System.out.println(itemToRemove + " has been removed " + removeQuan + " times");
+                        scanner.nextLine();
                     }
-                }else{
+                }else {
                     System.out.println("Item entered is not in cart.");
+                    scanner.nextLine();
                 }
             }
             else if (itemNamesPrices.containsKey(userInput)) {
                 System.out.println("How many of " + userInput + " do you want to add?");
                 prodQuantity = scanner.nextInt();
-                totalQuantity += prodQuantity;
+                scanner.nextLine();
                 shoppingCart.put(userInput, prodQuantity);
+                totalQuantity += prodQuantity;
                 System.out.println(userInput + " has been added to cart.");
-            } else if ((!itemNamesPrices.containsKey(userInput)) && (!userInput.equals("remove")) && (!userInput.equals("done")) && (!userInput.equals("return"))){
+            }else {
                 System.out.println("This item is not available");
             }
-
         }
+
         System.out.println(totalQuantity);
         System.out.println(shoppingCart);
         double totalInvoice = calcTotal(shoppingCart, itemNamesPrices);
