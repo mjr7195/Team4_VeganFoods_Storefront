@@ -1,4 +1,4 @@
-/** class Customer makes the customer class.
+/** class Customer makes the customer object.
  * @author Marcos
  */
 public class Customer {
