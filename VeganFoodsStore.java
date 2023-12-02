@@ -45,8 +45,6 @@ public class VeganFoodsStore {
         //puts item names and prices into itemNamesPrices
         itemNamesPrices = inventory.getVeganNamePrice();
 
-
-
         System.out.println("Welcome to our vegan food store!");
 
         System.out.println("Are you interested in creating an account with us? Enter 'yes' to register or any key to skip.");
@@ -56,6 +54,7 @@ public class VeganFoodsStore {
         if  (newReturnCust.equals("yes")){
             newCustSignUp();
         }
+
         //holds order id and order to check for returns
         Map<Integer, Double> returnOrder = new TreeMap<>();
         //puts order id and order total into returnOrder for return checks
@@ -229,6 +228,22 @@ public class VeganFoodsStore {
         double totalInvoice = calcTotal(shoppingCart, itemNamesPrices);
         System.out.println("The total for your items today is $" + totalInvoice);
 
+        String checkcardNum = "^[0-9]+$";
+        Pattern cardNumPattern = Pattern.compile(checkcardNum);
+        String checkexDate = "^[0-9]+/[0-9]+$";
+        Pattern exDatePattern = Pattern.compile(checkexDate);
+        System.out.println("name on card:");
+        String nameonCard = scanner.nextLine();
+
+        System.out.println("Card Number:");
+        long cardNumber = scanner.nextLong();
+        System.out.println("Expiration Date:");
+        String exDate = scanner.nextLine();
+        System.out.println("Security Code:");
+        int secCode = scanner.nextInt();
+
+
+            System.out.println("Thanks for for shopping with us");
 
         System.out.println("Order will be shipped to the following address on file:");
         System.out.println(currentCustFName +" "+ currentCustLName);
