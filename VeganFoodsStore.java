@@ -228,9 +228,9 @@ public class VeganFoodsStore {
         double totalInvoice = calcTotal(shoppingCart, itemNamesPrices);
         System.out.println("The total for your items today is $" + totalInvoice);
 
-        String checkcardNum = "^[0-9]+$";
+        String checkcardNum = "^[0-9]{16}$";
         Pattern cardNumPattern = Pattern.compile(checkcardNum);
-        String checkexDate = "^[0-9]+/[0-9]+$";
+        String checkexDate = "^[0-9]{2}+/[0-9]{2}+$";
         Pattern exDatePattern = Pattern.compile(checkexDate);
         System.out.println("name on card:");
         String nameonCard = scanner.nextLine();
