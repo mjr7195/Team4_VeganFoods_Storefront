@@ -150,7 +150,7 @@ public class VeganFoodsStore {
             int returnId;
             System.out.println("Please input the name of the item you want to add into your shopping cart from the list above.");
             System.out.println("Enter 'remove' to remove an item from your cart.");
-            System.out.println("Enter 'return' to return an item.");
+            System.out.println("Enter 'return' to get a refund for a past order.");
             System.out.println("when finished input 'done' to checkout. ");
             userInput = scanner.nextLine().toLowerCase();
             scanner.nextLine();
@@ -168,7 +168,7 @@ public class VeganFoodsStore {
                     System.out.println("The amount returned is $" + moneyReturn);
                     scanner.nextLine();
                 }else{
-                    System.out.println("Sorry, order ID is invalid.");
+                    System.out.println("Sorry, order ID does not exist.");
                     scanner.nextLine();
                 }
             }
@@ -220,6 +220,7 @@ public class VeganFoodsStore {
             }
         }
 
+
         System.out.println(totalQuantity);
         System.out.println(shoppingCart);
         Random rand = new Random();
@@ -230,25 +231,58 @@ public class VeganFoodsStore {
 
         String checkcardNum = "^[0-9]{16}$";
         Pattern cardNumPattern = Pattern.compile(checkcardNum);
+
         String checkexDate = "^[0-9]{2}+/[0-9]{2}+$";
         Pattern exDatePattern = Pattern.compile(checkexDate);
+
+        String checkSecCode = "^[0-9]{3}$";
+        Pattern secCodePattern = Pattern.compile(checkSecCode);
+
+        String checkzip = "^[0-9]{5}$";
+        Pattern zipPattern = Pattern.compile(checkzip);
+
         System.out.println("name on card:");
         String nameonCard = scanner.nextLine();
 
         System.out.println("Card Number:");
-        long cardNumber = scanner.nextLong();
-        System.out.println("Expiration Date:");
+        String cardNumber = scanner.nextLine();
+        Matcher cardNummatcher = cardNumPattern.matcher(cardNumber);
+        while (!cardNummatcher.matches()){
+            System.out.println("Please input a valid card number:");
+            cardNumber = scanner.nextLine();
+            cardNummatcher = cardNumPattern.matcher(cardNumber);
+        }
+        System.out.println("Expiration Date (MM/YY):");
         String exDate = scanner.nextLine();
+        Matcher exDatematcher = exDatePattern.matcher(exDate);
+        while (!exDatematcher.matches()){
+            System.out.println("Please input a valid expiration date:");
+            exDate = scanner.nextLine();
+            exDatematcher = exDatePattern.matcher(exDate);
+        }
         System.out.println("Security Code:");
-        int secCode = scanner.nextInt();
-
-
-            System.out.println("Thanks for for shopping with us");
-
+        String secCode = scanner.nextLine();
+        Matcher secCodematcher = secCodePattern.matcher(secCode);
+        while (!secCodematcher.matches()){
+            System.out.println("Please input a valid Security code:");
+            secCode = scanner.nextLine();
+            secCodematcher = secCodePattern.matcher(secCode);
+        }
+        System.out.println("Zip Code:");
+        String zipCode = scanner.nextLine();
+        Matcher zipmatcher = zipPattern.matcher(zipCode);
+        while (!zipmatcher.matches()){
+            System.out.println("Please input a valid zip code:");
+            zipCode = scanner.nextLine();
+            zipmatcher = zipPattern.matcher(zipCode);
+        }
+        System.out.println();
         System.out.println("Order will be shipped to the following address on file:");
         System.out.println(currentCustFName +" "+ currentCustLName);
         System.out.println(currentCustaddress);
         System.out.println(currentCustCity + ", "+ currentCustState +" "+ currentCustZipCode);
+        System.out.println();
+        System.out.println("Thanks for shopping with us!");
 
         //sends transaction to the order table
         String insertOrderQuery = "INSERT INTO tblOrders (fldOrderId, fldCustomerId, fldItemsCount, fldOrderTotal) VALUES (?, ?, ?, ?)";
@@ -268,10 +302,9 @@ public class VeganFoodsStore {
         }catch(Exception e){ System.out.println(e);}
     }
 
-
     // Methods beyond this point **************************************************************************************************************
     /**
-     * method calcTotal gets
+     * method calcTotal gets total invoice for transaction
      * @param shopCart holds customer shopping items
      * @param itemPrices holds items names with prices
      * @return totalPrice
