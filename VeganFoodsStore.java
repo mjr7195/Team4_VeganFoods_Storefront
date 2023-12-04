@@ -228,7 +228,8 @@ public class VeganFoodsStore {
         System.out.println("order ID: " + orderID);
         double totalInvoice = calcTotal(shoppingCart, itemNamesPrices);
         System.out.println("The total for your items today is $" + totalInvoice);
-
+        System.out.println();
+        System.out.println("Please enter your card details:");
         String checkcardNum = "^[0-9]{16}$";
         Pattern cardNumPattern = Pattern.compile(checkcardNum);
 
